@@ -1,6 +1,17 @@
 import pandas as pd
 
-games_df = pd.read_csv("games-features.csv")
+games = pd.read_csv('games-features.csv')
 
-na_nulls = games_df.isna().sum().sum()
-print('There are', na_nulls, 'missing values in the Na column')
+
+# print(games.head())
+
+# print(games.columns)
+
+# print(games.info())
+
+print(games.isnull().sum())
+
+num_nas = games.isna().sum().sum()
+print(num_nas)
+
+# print(games.describe())
