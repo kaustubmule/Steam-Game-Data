@@ -1,58 +1,16 @@
-# %%
 import pandas as pd
 import random
 import seaborn as sns
 import matplotlib.pyplot as plt
-import plotly.express as px
 
 games = pd.read_csv('games-features.csv')
 
-# print(games.head())
-
-# print(games.columns)
-
-# print(games.info())
-
 # Data cleaning
 null_columns = games.columns[games.isnull().any()]
-# print(null_columns)
-
-games.dropna(subset=[
-    'QueryName', 'SupportEmail', 'SupportURL', 'LegalNotice', 'Website',
-    'DetailedDescrip'
-],
-    inplace=True)
-
-# print(games)
-# null_columns = games.columns[games.isnull().any()]
-# print(null_columns)
-# print(num_nas)
-
-# Data Reduction:
-
-# print('Before Data Reduction: \n', games)
-# print('After Data Reduction: \n', games)
-
-
-# Convert Generic/Categoric/Boolean to Numeric:
-games['IsFree'] = games['IsFree'].astype(int)
-for x in games.index:
-    print(games['IsFree'][x])
-
-
-games.drop(games.columns[games.dtypes == 'bool'], axis=1, inplace=True)
-print(games.columns)
-
-# Deleting the duplicates
-# games.sort_values('QueryName', inplace=True)
-games.drop_duplicates(subset='QueryName', keep=False, inplace=True)
-print(games)
-
-# Printing the updated list
-for x in games.index:
-    print(games['QueryName'][x])
+print(null_columns)
 
 # transforming 0's in Req age
+
 cnt = 0
 mean = 0
 
@@ -62,9 +20,40 @@ for i in games.index:
     mean += a
 
 mean = mean//cnt
+
 games['RequiredAge'] = games['RequiredAge'].replace(0, mean)
 # for x in games.index:
 #  print(games['RequiredAge'][x])
+
+
+# Convert Generic/Categoric/Boolean to Numeric:
+games['IsFree'] = games['IsFree'].astype(int)
+for x in games.index:
+    print(games['IsFree'][x])
+
+
+# Data Reduction:
+
+# print('Before Data Reduction: \n', games)
+
+games.dropna(subset=[
+    'QueryName', 'SupportEmail', 'SupportURL', 'LegalNotice', 'Website',
+    'DetailedDescrip'], inplace=True)
+
+# print('After Data Reduction: \n', games)
+
+
+games.drop(games.columns[games.dtypes == 'bool'], axis=1, inplace=True)
+print(games.columns)
+
+
+# Deleting the duplicates
+# games.sort_values('QueryName', inplace=True)
+games.drop_duplicates(subset='QueryName', keep=False, inplace=True)
+print(games)
+
+
+# Data Visualization
 
 IQ_Range = games['RecommendationCount'].mean() * 80
 
@@ -77,10 +66,14 @@ for i in games.index:
         cnt.append(games['RecommendationCount'][i])
 games.loc[:, 'MostRecommended'] = pd.Series(MostRecommended)
 
-games.to_csv('output.csv', index=False)
+x = np.array(MostRecommended)
+y = np.array(cnt)
 
+plt.figure(figsize=(22, 9))
+plt.bar(x, y)
 
-# Data Visualization
+plt.show()
+
 
 # Supported languages pie chart
 language_counts = games['SupportedLanguages'].value_counts()
@@ -100,3 +93,7 @@ plt.title('Supported Languages Pie Chart (Threshold: {})'.format(threshold))
 
 plt.tight_layout()
 plt.show()
+
+
+# Conversion to csv:
+games.to_csv('output.csv', index=False)
