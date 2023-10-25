@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -89,7 +90,7 @@ plt.pie(filtered_languages, labels=filtered_languages.index,
         autopct='%1.1f%%', startangle=140, explode=explode)
 
 plt.axis('equal')
-plt.title('Supported Languages Pie Chart (Threshold: {})'.format(threshold))
+plt.title('Supported Languages Pie Chart'.format(threshold))
 
 plt.tight_layout()
 plt.show()
